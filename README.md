@@ -1,10 +1,11 @@
---> To Run this program you need to set the JVM memory first by setting -Xms200m and -Xmx200M parameter. 
---> Your in memory processing of file depends on the Xms and Xmx parameter. 
---> For example if you set the initial and max memory to 200MB then this program will split the input file(which i supposed to big) into 45 to 50 MB each and apply sorting on it. 
+--> To Run this program you need to set the JVM memory first by setting -Xms200m and -Xmx200M parameter.
+--> Your in memory processing of file depends on the Xms and Xmx parameter.
+--> For example if you set the initial and max memory to 200MB then this program will split the input file(which i supposed to big) into 45 to 50 MB each and apply sorting on it.
 --> Once the input files splitted,sorted and saved in temp directory, next program will merge all these files and during merging it's use PriorityQueue & BinaryFileBuffer to sort the files.
 
-// Calculate the available memory by using below function.
+#// Calculate the available memory by using below function.
 public static double currentAvailableMemory() {
+	Double TO_GB = (double) (1024 * 1024 * 1024);
 		System.gc();
 		Runtime r = Runtime.getRuntime();		
 		long allocatedMemory = r.totalMemory() - r.freeMemory();
@@ -12,18 +13,17 @@ public static double currentAvailableMemory() {
 		return presFreeMemory;
 	}
   
-// Below method will decide the best memory size available to create the temp file.
-public static long bestSizeOfMemoryBlock(final long fileSize) {
 
+#// Below method will decide the best memory size available to create the temp file.
+public static long bestSizeOfMemoryBlock(final long fileSize) {
 		long blocksize = fileSize / MAX_TEMP_FILE + (fileSize % MAX_TEMP_FILE == 0 ? 0 : 1);
 		if (blocksize < MAX_MEMORY / 2) {
 			blocksize = MAX_MEMORY / 2;
 		}
 		return blocksize;
 	}
-
   
-  // Below method will return the size of read line in bytes from file.
+#// Below method will return the size of read line in bytes from file.
   public static long sizeOfTheReadLine(String s) {
 
 		int objHeader = 16;
