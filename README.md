@@ -6,27 +6,32 @@
 -->Calculate the available memory by using below function.
 
 public static double currentAvailableMemory() {
-	Double TO_GB = (double) (1024 * 1024 * 1024);
 		System.gc();
-		Runtime r = Runtime.getRuntime();		
+
+		Runtime r = Runtime.getRuntime();
+		System.out.println("Total Memory :" + r.totalMemory() / TO_GB);
+		System.out.println("Max Memory :" + r.maxMemory() / TO_GB);
+		System.out.println("Free Memory :" + r.freeMemory() / TO_GB);
+
 		long allocatedMemory = r.totalMemory() - r.freeMemory();
 		float presFreeMemory = (float) ((r.maxMemory() - allocatedMemory) / TO_GB);
 		return presFreeMemory;
 	}
-  
--->Below method will decide the best memory size available to create the temp file.
 
+-->Below method will decide the best memory size available to create the temp file.
 public static long bestSizeOfMemoryBlock(final long fileSize) {
+
 		long blocksize = fileSize / MAX_TEMP_FILE + (fileSize % MAX_TEMP_FILE == 0 ? 0 : 1);
 		if (blocksize < MAX_MEMORY / 2) {
 			blocksize = MAX_MEMORY / 2;
 		}
 		return blocksize;
 	}
-  
+
+
 -->Below method will return the size of read line in bytes from file.
 
-public static long sizeOfTheReadLine(String s) {
+	public static long sizeOfTheReadLine(String s) {
 
 		int objHeader = 16;
 		int arrayHeader = 24;
