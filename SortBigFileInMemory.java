@@ -59,7 +59,7 @@ public class SortBigFileInMemory {
 						long currentblocksize = 0;// in bytes
 						while ((currentblocksize < blockSize) && ((line = fbr.readLine()) != null)) {
 							tmplist.add(line);
-							currentblocksize += sizeOfTheString(line);
+							currentblocksize += sizeOfTheReadLine(line);
 
 						}
 						files.add(sortFileAndSaveInTempDir(tmplist, tempDirectory));
@@ -115,50 +115,46 @@ public class SortBigFileInMemory {
 
 	public static void mergeFilesAfterSortingAndSaveInNewfile(List<File> files, File outFile) throws IOException {
 		System.out.println("Merge and Sort");
-
 		ArrayList<BinaryFileBuffer> buffers = new ArrayList<>();
 		for (File f : files) {
 			InputStream in = new FileInputStream(f);
-			BufferedReader br;
-			{
-				br = new BufferedReader(new InputStreamReader(in));
-			}
-			BinaryFileBuffer bfb = new BinaryFileBuffer(br);
-			buffers.add(bfb);
+			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
+			BinaryFileBuffer fileBuffer = new BinaryFileBuffer(bufferReader);
+			buffers.add(fileBuffer);
 		}
 
-		BufferedWriter fbw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile, false)));
+		BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile, false)));
 
-		PriorityQueue<BinaryFileBuffer> pq = new PriorityQueue<>(11, new Comparator<BinaryFileBuffer>() {
+		PriorityQueue<BinaryFileBuffer> priorityQueue = new PriorityQueue<>(11, new Comparator<BinaryFileBuffer>() {
 			@Override
 			public int compare(BinaryFileBuffer i, BinaryFileBuffer j) {
 				return lineComparator.compare(i.peek(), j.peek());
 			}
 		});
 
-		for (BinaryFileBuffer bfb : buffers) {
-			if (!bfb.empty()) {
-				pq.add(bfb);
+		for (BinaryFileBuffer buffer : buffers) {
+			if (!buffer.empty()) {
+				priorityQueue.add(buffer);
 			}
 		}
 		try {
 
-			while (pq.size() > 0) {
-				BinaryFileBuffer bfb = pq.poll();
-				String r = bfb.pop();
-				fbw.write(r);
-				fbw.newLine();
-				if (bfb.empty()) {
-					bfb.fbr.close();
+			while (priorityQueue.size() > 0) {
+				BinaryFileBuffer binaryFileBuffer = priorityQueue.poll();
+				String r = binaryFileBuffer.pop();
+				bufferWriter.write(r);
+				bufferWriter.newLine();
+				if (binaryFileBuffer.empty()) {
+					binaryFileBuffer.fbr.close();
 				} else {
-					pq.add(bfb); // add it back
+					priorityQueue.add(binaryFileBuffer); // add it back
 				}
 			}
 
 		} finally {
-			fbw.close();
-			for (BinaryFileBuffer bfb : pq) {
-				bfb.close();
+			bufferWriter.close();
+			for (BinaryFileBuffer fileBuffer : priorityQueue) {
+				fileBuffer.close();
 			}
 		}
 		for (File f : files) {
@@ -196,7 +192,7 @@ public class SortBigFileInMemory {
 		}
 	};
 
-	public static long sizeOfTheString(String s) {
+	public static long sizeOfTheReadLine(String s) {
 
 		int objHeader = 16;
 		int arrayHeader = 24;
