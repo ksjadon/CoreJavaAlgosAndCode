@@ -5,9 +5,10 @@
 
 -->Calculate the available memory by using below function.
 
-public static double currentAvailableMemory() {
-		System.gc();
 
+	public static double currentAvailableMemory() {
+		System.gc();
+                Double TO_GB = (double) (1024 * 1024 * 1024);
 		Runtime r = Runtime.getRuntime();
 		System.out.println("Total Memory :" + r.totalMemory() / TO_GB);
 		System.out.println("Max Memory :" + r.maxMemory() / TO_GB);
@@ -18,8 +19,10 @@ public static double currentAvailableMemory() {
 		return presFreeMemory;
 	}
 
+
 -->Below method will decide the best memory size available to create the temp file.
-public static long bestSizeOfMemoryBlock(final long fileSize) {
+
+	public static long bestSizeOfMemoryBlock(final long fileSize) {
 
 		long blocksize = fileSize / MAX_TEMP_FILE + (fileSize % MAX_TEMP_FILE == 0 ? 0 : 1);
 		if (blocksize < MAX_MEMORY / 2) {
