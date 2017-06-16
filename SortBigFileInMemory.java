@@ -23,9 +23,9 @@ public class SortBigFileInMemory {
 	static int MAX_TEMP_FILE = 10;
 	static long MAX_MEMORY = Runtime.getRuntime().maxMemory();
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 
-		System.out.println("FreeBefor>>:" + currentAvailableMemory());
+		// System.out.println("FreeBefor>>:" + currentAvailableMemory());
 		try {
 
 			File inputFile;
@@ -35,14 +35,9 @@ public class SortBigFileInMemory {
 				System.out.println("Creating new File");
 				outFile.createNewFile();
 			}
-			/*
-			 * If user provides the file path then read that file.
-			 */
-			if (args[0] != null) {
-				inputFile = new File(args[0]);
-			} else {
-				inputFile = new File("C:/big/BigFile_3.txt");
-			}
+
+			inputFile = new File("C:/big/BigFile_1.txt");
+
 			BufferedReader fbr = new BufferedReader(new FileReader(inputFile));
 			long blockSize = bestSizeOfMemoryBlock(inputFile.length());
 			System.out.println(blockSize);
@@ -79,6 +74,7 @@ public class SortBigFileInMemory {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 
 		}
 
